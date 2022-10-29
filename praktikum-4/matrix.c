@@ -56,7 +56,7 @@ void displayMatrix(Matrix m) {
     for (j=1;j<COL_EFF(m);j++) {
       printf(" %d",ELMT(m,i,j));
     }
-    printf("\n"); 
+    printf("\n");
   }
 }
 
@@ -262,4 +262,115 @@ float determinant(Matrix m){
         }
     }
     return res;
+}
+
+/* Operasi berbasis baris dan per kolom */
+float AvgRow(Matrix M, IdxType i) {
+/* Menghasilkan rata-rata dari elemen pada baris ke-i */
+/* Prekondisi: i adalah indeks baris efektif dari M */
+    float sum = 0;
+    IdxType j;
+
+    for (j = 0; j <= getLastIdxCol(M); j++) {
+        sum += ELMT(M,i,j);
+    }    
+    return (sum/COL_EFF(M));
+}
+
+float AvgCol(Matrix M, IdxType j) {
+/* Menghasilkan rata-rata dari elemen pada kolom ke-j */
+/* Prekondisi: j adalah indeks kolom efektif dari M */
+    float sum = 0;
+    IdxType i;
+
+    for (i = 0; i <= getLastIdxRow(M); i++) {
+        sum += ELMT(M,i,j);
+    }
+    return (sum/ROW_EFF(M));
+}
+
+void MinMaxRow(Matrix M, IdxType i, ElType * max, ElType * min) {
+/* I.S. i adalah indeks baris efektif dari M, M terdefinisi */
+/* F.S. max berisi elemen maksimum pada baris i dari M
+min berisi elemen minimum pada baris i dari M */
+    IdxType j;
+    *max = ELMT(M,i,0);
+    *min = ELMT(M,i,0);
+
+    for (j = 0; j <= getLastIdxCol(M); j++) {
+        if (*max < ELMT(M,i,j)) {
+            *max = ELMT(M,i,j);
+        }
+        else if (*min > ELMT(M,i,j)) {
+            *min = ELMT(M,i,j);
+        }
+    }
+}
+
+void MinMaxCol(Matrix M, IdxType j, ElType * max, ElType * min) {
+/* I.S. j adalah indeks kolom efektif dari M, M terdefinisi */
+/* F.S. max berisi elemen maksimum pada kolom j dari M
+min berisi elemen minimum pada kolom j dari M */
+    IdxType i;
+    *max = ELMT(M,0,j);
+    *min = ELMT(M,0,j);
+
+    for (i = 0; i <= getLastIdxRow(M); i++) {
+        if (*max < ELMT(M,i,j)) {
+            *max = ELMT(M,i,j);
+        }
+        else if (*min > ELMT(M,i,j)) {
+            *min = ELMT(M,i,j);
+        }
+    }
+}
+
+int CountNumRow(Matrix M, IdxType i, ElType X) {
+/* Menghasilkan banyaknya kemunculan X pada baris i dari M */
+    int count = 0;
+    IdxType j;
+
+    for (j = 0; j <= getLastIdxCol(M); j++) {
+        if (ELMT(M,i,j) == X) {
+            count++;
+        }
+    }
+    return (count);
+}
+
+int CountNumCol(Matrix M, IdxType j, ElType X) {
+/* Menghasilkan banyaknya kemunculan X pada kolom j dari M */
+    int count = 0;
+    IdxType i;
+
+    for (i = 0; i <= getLastIdxRow(M); i++) {
+        if (ELMT(M,i,j) == X) {
+            count++;
+        }
+    }
+    return (count);
+}
+
+void RotateMat(Matrix *m){
+    Matrix n;copyMatrix(*m,&n);
+    int layer;
+    for(layer=0;layer<ROW_EFF(n)/2;layer++){
+        int i,j;
+        // kiri
+        for(i=layer;i<=ROW_EFF(n)-layer-2;i++){
+            ELMT(*m,i,layer)=ELMT(n,i+1,layer);
+        }
+        //atas
+        for(j=layer+1;j<=COL_EFF(n)-layer-1;j++){
+            ELMT(*m,layer,j)=ELMT(n,layer,j-1);
+        }
+        //kanan
+        for(i=layer+1;i<=ROW_EFF(n)-layer-1;i++){
+            ELMT(*m,i,COL_EFF(n)-layer-1)=ELMT(n,i-1,COL_EFF(n)-layer-1);
+        }
+        //bawah
+        for(j=layer;j<=COL_EFF(n)-layer-2;j++){
+            ELMT(*m,ROW_EFF(n)-layer-1,j)=ELMT(n,ROW_EFF(n)-layer-1,j+1);
+        }
+    }
 }

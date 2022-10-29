@@ -131,4 +131,13 @@ void pTranspose(Matrix *m);
 /* I.S. m terdefinisi dan IsSquare(m) */
 /* F.S. m "di-transpose", yaitu setiap elemen m(i,j) ditukar nilainya dengan elemen m(j,i) */
 
+float AvgRow(Matrix m, IdxType i);
+float AvgCol(Matrix m, IdxType j);
+void MinMaxRow(Matrix m, IdxType i, ElType* max, ElType* min);
+void MinMaxCol(Matrix m, IdxType j, ElType* max, ElType* min);
+int CountNumRow(Matrix m, IdxType i, ElType x);
+int CountNumCol(Matrix m, IdxType j, ElType x);
+void RotateMat(Matrix *m);
+
+
 #endif
