@@ -72,42 +72,38 @@ void displayList(List l){
     }
 }
 
-// benar
 ElType maxList (List l){
-    int res = head(l);
-    if(!isOneElmt(l)){
-        if (maxList(tail(l))>res) res = maxList(tail(l));
-    } return res;
+    ElType max = head(l);
+    if(isOneElmt(l)) return max;
+    ElType temp = maxList(tail(l));
+    if(temp>max) return temp;
+    return max;
 }
 
-// benar
 ElType minList (List l){
-    int res = head(l);
-    if(!isOneElmt(l)){
-        if(minList(tail(l))<res) res = minList(tail(l));
-    } return res;
+    ElType min = head(l);
+    if(isOneElmt(l))return min;
+    ElType temp = minList(tail(l));
+    if(temp<min)return temp;
+    return min;
 }
 
-// benar
-ElType sumList (List l){
-    int res = head(l);
-    if(!isOneElmt(l)){
-        res += sumList(tail(l));
-    } return res;
+ElType sumList(List l){
+    ElType sum=head(l);
+    if(isOneElmt(l))return sum;
+    return sum+sumList(tail(l));
 }
 
-// benar
-float averageList (List l){
+float averageList(List l){
     return sumList(l)/(float) length(l);
 }
 
-// benar
-List inverseList (List l){
+List inverseList(List l){
     if(isEmpty(l)) return l;
     return konsb(inverseList(tail(l)),head(l));
 }
 
-void splitPosNeg (List l, List *l1, List *l2){
+void splitPosNeg(List l, List *l1, List *l2){
     if(isEmpty(l)){
         *l1 = NULL; *l2 = NULL;
     } else if (isOneElmt(l)){
@@ -125,7 +121,7 @@ void splitPosNeg (List l, List *l1, List *l2){
     }
 }
 
-void splitOnX (List l, ElType x, List *l1, List *l2){
+void splitOnX(List l, ElType x, List *l1, List *l2){
     if(isEmpty(l)){
         *l1 = NULL; *l2 = NULL;
     } else if (isOneElmt(l)){
@@ -143,10 +139,42 @@ void splitOnX (List l, ElType x, List *l1, List *l2){
     }
 }
 
-boolean isEqual(List l1, List l2){
+boolean isExist(ElType x, List l){
+    if(isEmpty(l)) return false;
+    if (head(l)==x) return true;
+    return isExist(x,tail(l));
+}
+
+boolean isAllExist(List l1, List l2){
+    if(isEmpty(l1)) return false;
+    if(isOneElmt(l1)) return isExist(head(l1),l2);
+    return isExist(head(l1),l2) && isAllExist(tail(l1),l2);
+}
+
+List listBeforeX(List l, ElType x){
+    if(isEmpty(l)) return l;
+    if(head(l)==x) return NULL;
+    return konso(listBeforeX(tail(l),x),head(l));
+}
+
+List oddEven(List l, boolean odd){
+    if(isEmpty(l)) return l;
+    if(odd) return konso(oddEven(tail(l),!odd),head(l));
+    return oddEven(tail(l),!odd);
+}
+
+List takeEvenIndex(List l){
+    return oddEven(l,false);
+}
+
+List takeOddIndex(List l){
+    return oddEven(l,true);
+}
+
+boolean isSame(List l1, List l2){
     if(length(l1)!=length(l2)) return false;
     if(isEmpty(l1)) return true;
-    return (head(l1)==head(l2) && isEqual(tail(l1),tail(l2)));
+    return (head(l1)==head(l2) && isSame(tail(l1),tail(l2)));
 }
 
 boolean isLess(List l1, List l2){
@@ -158,19 +186,8 @@ boolean isLess(List l1, List l2){
     return isLess(tail(l1),tail(l2));
 }
 
-int compareList (List l1, List l2){
-    if(isEqual(l1,l2)) return 0;
+int compareList(List l1, List l2){
+    if(isSame(l1,l2)) return 0;
     if(isLess(l1,l2)) return -1;
     return 1;
-}
-
-boolean isExist(List l, ElType x){
-    if(isEmpty(l)) return false;
-    return (head(l)==x || isExist(tail(l),x));
-}
-
-boolean isAllExist (List l1, List l2){
-    if(isEmpty(l1)) return false;
-    if(isOneElmt(l1)) return isExist(l2,head(l1));
-    return (isExist(l2,head(l1)) && isAllExist(tail(l1),l2));
 }
