@@ -28,7 +28,7 @@ Address newTreeNode(ElType val){
         ROOT(p) = val;
         LEFT(p) = NULL;
         RIGHT(p) = NULL;
-    }
+    } return p;
 }
 
 void deallocTreeNode (Address p){
